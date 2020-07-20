@@ -1,4 +1,27 @@
 ---
+
+- name: Ensure key for repository exists.
+  rpm_key:
+    state: present
+    key: "{{ postgresql_rpm_key_url }}"
+
+- name: Ensure repository for postgres {{ postgresql_version }} is installed.
+  yum_repository:
+    description: "PostgreSQL {{ postgresql_version }} for RHEL/CentOS $releasever - $basearch"
+    file: /etc/yum.repos.d/postgres_{{ postgresql_version }}.repo
+    name: "pgdg{{ postgresql_version }}"
+    baseurl: "https://download.postgresql.org/pub/repos/yum/{{ postgresql_version }}/redhat/rhel-$releasever-$basearch"
+    gpgcheck: yes
+  register: _repofile
+
+- name: Ensure repository for postgres-common is installed.
+  yum_repository:
+    description: "PostgreSQL common for RHEL/CentOS $releasever - $basearch"
+    file: /etc/yum.repos.d/postgres_{{ postgresql_version }}.repo
+    name: pgdg-common
+    baseurl: "https://download.postgresql.org/pub/repos/yum/common/redhat/rhel-$releasever-$basearch"
+    gpgcheck: yes
+
 - name: Ensure PostgreSQL packages are installed.
   yum:
     name: "{{ postgresql_packages }}"

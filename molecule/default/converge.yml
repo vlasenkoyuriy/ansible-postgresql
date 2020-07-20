@@ -37,7 +37,7 @@
         - ansible_distribution_version.split('.')[0] == '6'
 
   roles:
-    - role: geerlingguy.postgresql
+    - role: vlasenkoyuriy.ansible_postgresql
 
   post_tasks:
     - name: Verify postgres is running.
